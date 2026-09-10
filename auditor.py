@@ -13,3 +13,9 @@ while True:
     #stop when the operator has finished entering stock
     if stock_input.lower() == 'quit':
         break
+
+    #negative stock should not be added to inventory
+    if stock_input.startswith('-') and stock_input[1:].isdigit():
+        print("Error: Stock quantity cannot be negative.")
+        failed_entries += 1
+        continue
