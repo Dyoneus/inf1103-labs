@@ -33,3 +33,8 @@ while True:
     inventory += quantity
 
     print(f"Current inventory:", inventory)
+
+    #stop processing once t he storage limit has been exceeded
+    if inventory > 500:
+        print("Overstock Alert: Inventory exceeds 500 units.")
+        break
