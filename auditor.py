@@ -25,3 +25,11 @@ while True:
         print("Error: Please enter a valid integer.")
         failed_entries += 1
         continue
+
+    #user input is safe to convert after it has pass the validation
+    quantity = int(stock_input)
+
+    #keep a total of all accepted stock
+    inventory += quantity
+
+    print(f"Current inventory:", inventory)
