@@ -19,3 +19,9 @@ while True:
         print("Error: Stock quantity cannot be negative.")
         failed_entries += 1
         continue
+
+    #reject text or other values that are not whole numbers
+    if not stock_input.isdigit():
+        print("Error: Please enter a valid integer.")
+        failed_entries += 1
+        continue
