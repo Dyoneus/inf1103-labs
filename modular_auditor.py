@@ -65,8 +65,6 @@ while True:
     inventory = process_delivery(inventory, stock_input)
     tax = calculate_tax(stock_input)
 
-    # process the delivery and update inventory
-    inventory = process_delivery(inventory, stock_input)
     deliveries_processed += 1
 
     print("Current inventory: ", inventory)
