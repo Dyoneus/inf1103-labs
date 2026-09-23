@@ -15,3 +15,8 @@
 # process delivery that returns updated inventory
 def process_delivery(current_total, new_value):
     return current_total + new_value
+
+
+# calculate tax for each delivery, return amount * 0.10%
+def calculate_tax(amount):
+    return amount * 0.10
