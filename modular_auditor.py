@@ -44,5 +44,34 @@ def get_valid_input():
 # generate report
 def generate_report(total_units, failed_attempts):
     print("\nAudit Report")
-    print("Total Units Processed:", total_units)
-    print("Number of Failed/Rejected Entries:", failed_attempts)
+    print("Total Units Processed: ", total_units)
+    print("Number of Failed/Rejected Entries: ", failed_attempts)
+
+# start of main
+inventory = 0
+failed_entries = 0
+deliveries_processed = 0
+
+while True:
+    stock_input = get_valid_input()
+
+    if stock_input == "quit":
+        break
+
+    if stock_input is None:
+        failed_entries += 1
+        continue
+
+    inventory = process_delivery(inventory, stock_input)
+    tax = calculate_tax(stock_input)
+
+    # process the delivery and update inventory
+    inventory = process_delivery(inventory, stock_input)
+    deliveries_processed += 1
+
+    print("Current inventory: ", inventory)
+    print("Tax for this delivery: ", tax)
+
+generate_report(inventory, failed_entries)
+
+print("Total deliveries processed: ", deliveries_processed)
