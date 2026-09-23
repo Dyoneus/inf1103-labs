@@ -39,3 +39,10 @@ def get_valid_input():
         return None
 
     return int(stock_input)
+
+
+# generate report
+def generate_report(total_units, failed_attempts):
+    print("\nAudit Report")
+    print("Total Units Processed:", total_units)
+    print("Number of Failed/Rejected Entries:", failed_attempts)
