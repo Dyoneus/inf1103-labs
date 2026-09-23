@@ -20,3 +20,22 @@ def process_delivery(current_total, new_value):
 # calculate tax for each delivery, return amount * 0.10%
 def calculate_tax(amount):
     return amount * 0.10
+
+# get_valid_input 
+def get_valid_input():
+    stock_input = input("Enter stock quantity or 'quit' to exit: ").strip()
+
+    if stock_input.lower() == 'quit':
+        return "quit"
+
+    #negative number error message
+    if stock_input.startswith("-") and stock_input[1:].isdigit():
+        print("Error: Stock quantity cannot be negative.")
+        return None
+
+    #reject text and other invalid values
+    if not stock_input.isdigit():
+        print("Error: Please enter a valid integer.")
+        return None
+
+    return int(stock_input)
