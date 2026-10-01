@@ -82,6 +82,10 @@ while True:
 
     # Update inventory for each delivery
     inventory = process_delivery(inventory, stock_value)
+
+    # record only the new delivery
+    transaction_history.append(stock_value)
+
     tax = calculate_tax(stock_value)
     deliveries_processed += 1
 
@@ -90,3 +94,4 @@ while True:
 
 generate_report(inventory, failed_entries)
 print("Total deliveries processed: ", deliveries_processed)
+print("Transaction history: ", transaction_history)
