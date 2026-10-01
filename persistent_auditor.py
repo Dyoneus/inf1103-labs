@@ -12,6 +12,13 @@
 # generate report(total_units, failed_attempts) a dedicated function to print the final summarry
 # input final inventory and failed attempts count | output the final report
 
+def save_inventory(total_units, transaction_history):
+    with open("inventory.txt", "w") as file:
+        file.write(str(total_units) + "\n")
+        
+        for transaction in transaction_history:
+            file.write(str(transaction) + "\n")
+
 # load inventory saved from the previous run
 def load_inventory():
     with open("inventory.txt", "a") as file:
@@ -91,6 +98,9 @@ while True:
 
     print("Current inventory: ", inventory)
     print("Tax for this delivery: ", tax)
+
+# save after quit
+save_inventory(inventory, transaction_history)
 
 generate_report(inventory, failed_entries)
 print("Total deliveries processed: ", deliveries_processed)
