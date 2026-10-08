@@ -111,6 +111,12 @@ def update_stock(inventory):
     product['stock'] = new_stock
     print("Stock updated successfully!")
 
+def save_inventory(inventory):
+    with open("inventory.json", "w") as file:
+        json.dump(inventory, file)
+
+    print("Inventory saved successfully to inventory.json.")
+
 #main program
 print("INVENTORY MANAGEMENT SYSTEM")
 inventory = load_inventory()
@@ -145,10 +151,12 @@ while True:
             display_all([product])
 
     elif option == "5":
-        print("Saving inventory.")
+        save_inventory(inventory)
 
     elif option == "6":
-        print("Exiting program.")
+        print("Saving inventory before exit...")
+        save_inventory(inventory)
+        print("Thank you for using Inventory Management System.")
         break
 
     else:
