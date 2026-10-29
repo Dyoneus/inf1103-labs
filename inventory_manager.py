@@ -1,47 +1,56 @@
 #week 5
 import json
 import os
+
+import product as product_module
+import inventory as inventory_module
+
 def load_inventory():
+    inventory = inventory_module.Inventory()
+
     #missing file means this is a ne winventory.
     if not os.path.exists("inventory.json"):
-        print("inventory.json not found. Starting with an empty inventory.")
-        return []
-    
-    print("inventory.json found.")
+        print("No saved inventory. Starting with an empty inventory.")
+        return inventory
 
     with open("inventory.json", "r") as file:
-        inventory = json.load(file)
+        saved_products = json.load(file)
 
-    print("inventory loaded successfully.")
+    for data in saved_products:
+        product = product_module.Product(data["id"], data["name"], data["price"], data["stock"])
+
+        if not inventory.add_product(product):
+            print("Duplicate ID skipped:", product.get_product_id())
+
+    print("Inventory loaded successfully.")
     return inventory
 
-def display_all(inventory):
-    print("\nCurrent Inventory")
+def save_inventory(inventory):
+    saved_products = []
 
-    if len(inventory) == 0:
-        print("No products in inventory.")
-        return
+    #perpare plain data before writing the complete list to JSON
+    for product in inventory.get_products():
+        saved_products.append(product.to_dict())
 
-    for product in inventory:
-        print("ID:", product['id'], "| Name:", product['name'], 
-              "| Price: $", product["price"], "| Stock:", product["stock"])
+    with open("inventory.json", "w") as file:
+        json.dump(saved_products, file)
 
-def search_product(inventory, product_id):
-    #return matching dictionary so other func can use it
-    for product in inventory:
-        if product['id'] == product_id:
-            return product
-        
-    return None
+    print("Inventory saved successfully.")
 
 def get_stock(prompt):
     while True:
         stock_text = input(prompt)
+        valid = stock_text != ""
 
-        if stock_text.isdigit():
+        #accept normal digits only, not signs or decimal points
+        for character in stock_text:
+            if character not in "0123456789":
+                valid = False
+
+        if valid:
             return int(stock_text)
 
-        print("Error: Stock must be a non-negative integer.")
+        print("Error: Stock must be a non-negative number.")
 
 def get_price():
     while True:
@@ -62,9 +71,9 @@ def get_price():
         if valid and digits > 0 and decimal_points <= 1:
             return float(price_text)
 
-        print("Error: Enter a non-negative price.")
+        print("Error: Enter a non-negative price, such as 25.50")
 
-def add_product(inventory):
+def add_product_from_input(inventory):
     print("\nAdd New Product")
     product_id = input("Product ID: ")
 
@@ -73,7 +82,7 @@ def add_product(inventory):
         return
 
     #duplicate ids would make searches and updates
-    if search_product(inventory, product_id) is not None:
+    if inventory.search_product(product_id) is not None:
         print("Error: Product ID already exists.")
         return
 
@@ -86,69 +95,58 @@ def add_product(inventory):
     price = get_price()
     stock = get_stock("Stock Quantity: ")
 
-    product = {"id": product_id, "name": name,
-               "price": price, "stock": stock}
+    product = product_module.Product(product_id, name, price, stock)
 
     #add only after all info has been accepted
-    inventory.append(product)
-    print("Product added successfully!")
+    if inventory.add_product(product):
+        print("Product added successfully!")
 
-def update_stock(inventory):
-    print("\nUpdate Stock")
+def update_stock_from_input(inventory):
     product_id = input("Enter Product ID: ")
-    product = search_product(inventory, product_id)
+    product = inventory.search_product(product_id)
 
     if product is None:
-        print("Error: Product not found.")
+        print("Product not found.")
         return
 
-    print("Name:", product['name'])
-    print("Current Stock:", product['stock'])
+    product.display_information()
+    quantity = get_stock("Enter new stock quantity: ")
 
-    new_stock = get_stock("New Stock Quantity: ")
-
-    #replace old stock
-    product['stock'] = new_stock
+    product.update_stock(quantity)
     print("Stock updated successfully!")
-
-def save_inventory(inventory):
-    with open("inventory.json", "w") as file:
-        json.dump(inventory, file)
-
-    print("Inventory saved successfully to inventory.json.")
 
 #main program
 print("INVENTORY MANAGEMENT SYSTEM")
 inventory = load_inventory()
 
 while True:
-    print("\nMenu:")
+    print("\n----------- Menu -----------")
     print("1. Display All Products")
-    print("2. Add New Product")
-    print("3. Update Stock Quantity")
-    print("4. Search Product by ID")
+    print("2. Add Product")
+    print("3. Update Stock")
+    print("4. Search Product")
     print("5. Save Inventory")
     print("6. Exit")
 
     option = input("Enter option: ")
 
     if option == "1":
-        display_all(inventory)
+        inventory.display_all()
 
     elif option == "2":
-        add_product(inventory)
+        add_product_from_input(inventory)
 
     elif option == "3":
-        update_stock(inventory)
+        update_stock_from_input(inventory)
 
     elif option == "4":
         product_id = input("Enter Product ID: ")
-        product = search_product(inventory, product_id)
+        product = inventory.search_product(product_id)
 
         if product is None:
-            print("Error: Product not found.")
+            print("Product not found.")
         else:
-            display_all([product])
+            product.display_information()
 
     elif option == "5":
         save_inventory(inventory)
@@ -160,4 +158,4 @@ while True:
         break
 
     else:
-        print("Error: Invalid option. Please try again.")
+        print("Invalid option. Please enter 1 to 6.")
