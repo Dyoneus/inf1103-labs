@@ -16,3 +16,9 @@ laptop.display_information()
 print("\nFulfilmen: ")
 print(laptop.get_fulfilment_info())
 print(course.get_fulfilment_info())
+
+mouse = physical_module.PhysicalProduct("P002", "Mouse", 25.5, 40, 0.2)
+
+print("\nShipping tests:")
+print("2 kg, expected shipping cost: $10.0:", laptop.calculate_shipping_cost())
+print("0.2 kg, expected shipping cost: $1.0:", mouse.calculate_shipping_cost())

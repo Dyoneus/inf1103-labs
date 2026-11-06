@@ -1,6 +1,7 @@
 import product as product_module
+import can_be_shipped as shipping_module
 
-class PhysicalProduct(product_module.Product):
+class PhysicalProduct(product_module.Product, shipping_module.CanBeShipped):
     def __init__(self, product_id, name, price, stock, weight):
         super().__init__(product_id, name, price, stock)
         self.__weight = weight
@@ -11,3 +12,6 @@ class PhysicalProduct(product_module.Product):
 
     def get_fulfilment_info(self):
         return "Requires physical shipping."
+
+    def calculate_shipping_cost(self):
+        return self.__weight * 5.0 # shipping costs $5 per kg
