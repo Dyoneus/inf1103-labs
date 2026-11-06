@@ -8,3 +8,6 @@ class DigitalProduct(product_module.Product):
     def display_information(self):
         super().display_information() #reuses the display_information method from the parent class
         print("Download Size (MB):", self.__download_size)
+
+    def get_fulfilment_info(self):
+        return "Delivered digitally."

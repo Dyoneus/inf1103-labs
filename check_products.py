@@ -12,3 +12,7 @@ course.display_information()
 print("\nAfter updating laptop stock to 20:")
 laptop.update_stock(20)
 laptop.display_information()
+
+print("\nFulfilmen: ")
+print(laptop.get_fulfilment_info())
+print(course.get_fulfilment_info())
