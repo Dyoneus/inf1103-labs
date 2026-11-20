@@ -1,5 +1,7 @@
 #week 5
+from  product_factory import ProductFactory
 import json
+
 
 import supplier as supplier_module
 import physical_product as physical_module
@@ -50,28 +52,11 @@ def load_inventory():
             suppliers.append(supplier)
 
         if data["type"] == "physical":
-            product = physical_module.PhysicalProduct(
-                data["id"],
-                data["name"],
-                data["price"],
-                data["stock"],
-                data["weight"],
-                supplier
-            )
-
-        elif data["type"] == "digital":
-            product = digital_module.DigitalProduct(
-                data["id"],
-                data["name"],
-                data["price"],
-                data["stock"],
-                data["download_size"],
-                supplier
-            )
-
+            extra_value = data["weight"]
         else:
-            print("Unknown product type.", data["type"])
-            return None
+            extra_value = data["download_size"]
+
+        product = ProductFactory.create(data["type"], data["id"], data["name"], data["price"], data["stock"], supplier, extra_value)
 
         if not inventory.add_product(product):
             print("There is a duplicate product ID in file:", data["id"])
@@ -179,14 +164,18 @@ def add_product_from_input(inventory):
     supplier = get_supplier_for_product(inventory)
 
     if product_type == "1":
-        weight = get_number("Weight (kg): ")
-        product = physical_module.PhysicalProduct(product_id, name, price, stock, weight, supplier)
+        product_type = "physical"
+        extra_value = get_number("Weight (kg): ")
     else:
-        download_size = get_number("Download Size (MB): ")
-        product = digital_module.DigitalProduct(product_id, name, price, stock, download_size, supplier)
+        product_type = "digital"
+        extra_value = get_number("Download Size (MB): ")
 
-    if inventory.add_product(product):
-        print("Product added successfully.")
+    try:
+        product = ProductFactory.create(product_type, product_id, name, price, stock, supplier, extra_value)
+
+    except ValueError as error:
+        print(error)
+        return
 
 
 def update_stock_from_input(inventory):
