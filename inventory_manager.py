@@ -1,5 +1,8 @@
 #week 5
-from  product_factory import ProductFactory
+from product_factory import ProductFactory
+from bulk_discount import BulkDiscount
+from percentage_discount import PercentageDiscount
+from student_discount import StudentDiscount
 import json
 
 
