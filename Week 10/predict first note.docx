@@ -1,0 +1,10 @@
+Implement Association: Supplier and Product
+Question: After creating the product, what happen if wedelete the variable supplier? Will the products still display their supplier finromation?
+
+Prediction: I think both products will still be able to display the supplier information as the supplier object has already been passed into both products, and each product has a reference stored to it.
+
+Expected result after check: After running check_association.py, both products should still display the supplier's ID, name and email even though the original supplier variable has been deleted.
+
+Explanation: del supplier removes the variable's reference to the supplier object but the PhysicalProduct and DigitalProduct should still have their own references to the same object.
+
+Reflection: Deleting variable does not mean destroy the object it is referred to previously. An object can still continue to exist when other reference remains.
