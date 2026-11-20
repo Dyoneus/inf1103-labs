@@ -19,7 +19,7 @@ def load_inventory():
     with open("inventory.json", "r") as file:
         data_text = file.readlines()
 
-    if data_text == "":
+    if len(data_text) == 0:
         print("No saved inventory. Starting empty file.")
         return inventory
 
@@ -116,6 +116,21 @@ def get_number(prompt):
 
         print("Error: Enter a non-negative number, such as 2 or 2.5.")
 
+
+def get_positive_float(prompt: str) -> float:
+    while True:
+        try:
+            value = float(input(prompt))
+
+            if value <= 0:
+                print("Please ener a number greater than zero.")
+                continue
+
+            return value
+        
+        except ValueError:
+            print("Please enter a valid number. e.g. 12.50")
+
 def get_supplier_for_product(inventory):
     supplier_id = input("Supplier ID: ")
 
@@ -158,7 +173,7 @@ def add_product_from_input(inventory):
         print("Error: Product Name cannot be empty.")
         return
 
-    price = get_number("Price: ")
+    price = get_positive_float("Price: ")
     stock = get_stock("Stock Quantity: ")
 
     supplier = get_supplier_for_product(inventory)
@@ -177,6 +192,11 @@ def add_product_from_input(inventory):
         print(error)
         return
 
+    if inventory.add_product(product):
+        print("Product added successfully.")
+    else:
+        print("Product ID already exists.")
+
 
 def update_stock_from_input(inventory):
     product_id = input("Enter Product ID: ")
@@ -189,8 +209,12 @@ def update_stock_from_input(inventory):
     product.display_information()
     quantity = get_stock("Enter new stock quantity: ")
 
-    product.update_stock(quantity)
-    print("Stock updated successfully!")
+    try:
+        product.update_stock(quantity)
+        print("Stock updated successfully.")
+
+    except ValueError as error:
+        print(error)
 
 def find_order(orders: list[order_module.Order], order_id: str) -> order_module.Order | None:
     for order in orders:
@@ -228,11 +252,11 @@ def create_order(inventory, orders) -> None:
 
         quantity = int(quantity_text)
 
-        if quantity <= 0:
-            print("Quantity must be greater than zero.")
-            continue
+        try:
+            order.add_order_line(product, quantity)
 
-        order.add_order_line(product, quantity)
+        except ValueError as error:
+            print(error)
 
     if len(order.get_order_lines()) == 0:
         print("No order lines added.")
