@@ -4,6 +4,11 @@ from supplier import Supplier
 # product object represents one item in the inventory
 class Product(ABC):
     def __init__(self, product_id: str, name: str, price: float, stock: int, supplier: Supplier) -> None:
+        if price <= 0:
+            raise ValueError("Price must be greater than zero.")
+        if stock < 0:
+            raise ValueError("Stock cannot be negative.")
+        
         self.__product_id: str = product_id
         self.__name: str = name
         self.__price: float = price
@@ -25,8 +30,7 @@ class Product(ABC):
     def update_stock(self, quantity: int) -> None:
         #reject negative stock value even when called outside menu
         if quantity < 0:
-            print("Error: Stock cannot be negative.")
-            return
+            raise ValueError("Stock cannot be negative.")
 
         #the quantity replaces the old stock
         self.__stock = quantity

@@ -19,10 +19,6 @@ class Order:
         return self.__order_id
 
     def add_order_line(self, product: Product, quantity: int) -> None:
-        if quantity <= 0:
-            print("Quantity must be greater than zero.")
-            return
-
         order_line = OrderLine(product, quantity)
         self.__order_lines.append(order_line)
 
